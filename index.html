@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Country Warming Explorer (CMIP6)</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+  <header>
+    <h1>Country Warming Explorer (CMIP6)</h1>
+    <p>Annual temperature anomalies vs 1850–1900 baseline; shaded bands show the Paris targets.</p>
+  </header>
+
+  <section id="controls">
+    <div>
+      <label>Countries</label>
+      <select id="countrySelect" multiple size="6"></select>
+    </div>
+    <div>
+      <label>Scenarios</label>
+      <label><input type="checkbox" value="ssp126" checked> SSP126</label>
+      <label><input type="checkbox" value="ssp245" checked> SSP245</label>
+      <label><input type="checkbox" value="ssp370" checked> SSP370</label>
+      <label><input type="checkbox" value="ssp585" checked> SSP585</label>
+    </div>
+    <div>
+      <label>Rolling mean (years)</label>
+      <input id="smooth" type="range" min="1" max="11" step="2" value="5">
+      <span id="smoothLabel">5</span>
+    </div>
+    <div>
+      <label><input id="yAuto" type="checkbox" checked> Auto-rescale y on brush</label>
+    </div>
+  </section>
+
+  <section id="chart">
+    <svg id="focus"></svg>
+    <svg id="context"></svg>
+    <div id="tooltip" class="tooltip" style="opacity:0"></div>
+  </section>
+
+  <section id="notes">
+    <p><em>Note:</em> Temperature anomaly = annual mean − 1850–1900 mean (per country). Bands at 1.5 °C and 2.0 °C mark Paris thresholds.</p>
+    <div id="summary"></div>
+  </section>
+
+  <script src="main.js"></script>
+</body>
+</html>
