@@ -124,17 +124,53 @@ function render() {
     ).attr("cx", d => x(d.x)).attr("cy", d => y(d.y)).attr("fill", d => color(d.scenario));
   });
 
-  // hover tooltip
-  const tip = d3.select("#tooltip");
-  focus.on("mousemove", (ev) => {
-    const [mx,my] = d3.pointer(ev, gF.node());
+// --- Hover tooltip + vertical hover line ---
+let hoverLine = gF.selectAll(".hover-line").data([null]);
+hoverLine = hoverLine.join("line")
+  .attr("class", "hover-line")
+  .attr("y1", 0)
+  .attr("y2", innerH)
+  .attr("stroke", "#aaa")
+  .attr("stroke-width", 1.2)
+  .attr("stroke-dasharray", "3 3")
+  .style("opacity", 0);
+
+const tip = d3.select("#tooltip");
+focus
+  .on("mousemove", (ev) => {
+    const [mx] = d3.pointer(ev, gF.node());
     const year = Math.round(x.invert(mx));
+
+    // Filter visible subset
     const nearby = filtered.filter(d => d.year === year);
-    if (!nearby.length) { tip.style("opacity",0); return; }
-    const lines = nearby.slice(0,12).map(d => `${d.country} — ${d.scenario.toUpperCase()}: ${d.anom.toFixed(2)}°C`);
-    tip.style("opacity",1).style("left", (ev.pageX+12)+"px").style("top", (ev.pageY+12)+"px")
-       .html(`<strong>${year}</strong><br>${lines.join("<br>")}`);
-  }).on("mouseleave", () => tip.style("opacity",0));
+    if (!nearby.length) {
+      hoverLine.style("opacity", 0);
+      tip.style("opacity", 0);
+      return;
+    }
+
+    // Update hover line position
+    hoverLine
+      .attr("x1", x(year))
+      .attr("x2", x(year))
+      .style("opacity", 0.6);
+
+    // Build tooltip content
+    const lines = nearby
+      .slice(0, 12)
+      .map(d => `<span style="color:${color(d.scenario)}">●</span> ${d.country} — ${d.scenario.toUpperCase()}: ${d.anom.toFixed(2)}°C`);
+    
+    tip
+      .style("opacity", 1)
+      .style("left", (ev.pageX + 12) + "px")
+      .style("top", (ev.pageY - 20) + "px")
+      .html(`<strong>${year}</strong><br>${lines.join("<br>")}`);
+  })
+  .on("mouseleave", () => {
+    hoverLine.style("opacity", 0);
+    tip.style("opacity", 0);
+  });
+
 
   // summary (brush window)
   d3.select("#summary").text("");

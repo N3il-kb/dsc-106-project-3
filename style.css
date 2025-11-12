@@ -119,3 +119,25 @@ body {
     opacity: 1;
   }
   
+  .hover-line {
+    pointer-events: none;
+    stroke: #aaa;
+    stroke-width: 1.2px;
+    stroke-dasharray: 3 3;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(35, 37, 45, 0.9);
+    border: 1px solid #555;
+    color: #f0f0f0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: opacity 0.15s ease-out;
+  }
+  
