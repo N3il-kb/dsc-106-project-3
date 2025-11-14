@@ -10,40 +10,82 @@
 <body>
   <header>
     <h1>Country Warming Explorer (CMIP6)</h1>
-    <p>Annual temperature anomalies vs 1850–1900 baseline; shaded bands show the Paris targets.</p>
+    <p>
+  This visualization uses CMIP6 climate model projections to show how much warmer the
+  selected countries become under different future emissions scenarios (SSP1–2.6 through
+  SSP5–8.5). Anomalies are computed relative to the selected countries model-estimated
+  1850–1900 pre-industrial temperature. The shaded bands show the
+  Paris Agreement’s 1.5&nbsp;°C and 2.0&nbsp;°C temperature goals.
+</p>
   </header>
 
   <section id="controls">
     <div>
       <label>Countries</label>
-      <select id="countrySelect" multiple size="6"></select>
+      <select id="countrySelect" multiple size="5"></select>
     </div>
     <div>
-      <label>Scenarios</label>
-      <label><input type="checkbox" value="ssp126" checked> SSP126</label>
-      <label><input type="checkbox" value="ssp245" checked> SSP245</label>
-      <label><input type="checkbox" value="ssp370" checked> SSP370</label>
-      <label><input type="checkbox" value="ssp585" checked> SSP585</label>
-    </div>
+  <label>Scenarios</label>
+  <div class="scenario-column">
+
+    <label class="scenario-item">
+      <span class="legend-box" style="background:#1f77b4;"></span>
+      <input type="checkbox" value="ssp126" checked>
+      SSP1-2.6 <span class="scenario-desc">(Low emissions)</span>
+    </label>
+
+    <label class="scenario-item">
+      <span class="legend-box" style="background:#2ca02c;"></span>
+      <input type="checkbox" value="ssp245" checked>
+      SSP2-4.5 <span class="scenario-desc">(Intermediate)</span>
+    </label>
+
+    <label class="scenario-item">
+      <span class="legend-box" style="background:#ff7f0e;"></span>
+      <input type="checkbox" value="ssp370" checked>
+      SSP3-7.0 <span class="scenario-desc">(High emissions)</span>
+    </label>
+
+    <label class="scenario-item">
+      <span class="legend-box" style="background:#d62728;"></span>
+      <input type="checkbox" value="ssp585" checked>
+      SSP5-8.5 <span class="scenario-desc">(Very high emissions)</span>
+    </label>
+
+  </div>
+</div>
     <div>
       <label>Rolling mean (years)</label>
       <input id="smooth" type="range" min="1" max="11" step="2" value="5">
       <span id="smoothLabel">5</span>
     </div>
-    <div>
-      <label><input id="yAuto" type="checkbox" checked> Auto-rescale y on brush</label>
-    </div>
   </section>
+
+  
 
   <section id="chart">
     <svg id="focus"></svg>
-    <svg id="context"></svg>
     <div id="tooltip" class="tooltip" style="opacity:0"></div>
   </section>
 
   <section id="notes">
-    <p><em>Note:</em> Temperature anomaly = annual mean − 1850–1900 mean (per country). Bands at 1.5 °C and 2.0 °C mark Paris thresholds.</p>
-    <div id="summary"></div>
+    <p>
+  <em>Note:</em> A temperature anomaly measures how much warmer a given year is compared to
+  the 1850–1900 average for the selected countries.
+</p>
+
+<p style="margin-top:6px;">
+  <strong>For example:</strong> If in 2027 the annual mean temperature in the United States is predicted to be
+  13&nbsp;°C and the 1850–1900 average in the United States is 12&nbsp;°C, then the anomaly is 1&nbsp;°C.
+</p>
+
+<p>
+  The shaded bands and dashed lines at 1.5&nbsp;°C and 2.0&nbsp;°C mark the Paris Agreement
+  warming goals.
+</p>
+
+<div id="summary"></div>
+
   </section>
 
   <script src="main.js"></script>
