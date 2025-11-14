@@ -11,54 +11,65 @@
   <header>
     <h1>Country Warming Explorer (CMIP6)</h1>
     <p>
-  This visualization uses CMIP6 climate model projections to show how much warmer the
-  selected countries become under different future emissions scenarios (SSP1–2.6 through
-  SSP5–8.5). Anomalies are computed relative to the selected countries model-estimated
-  1850–1900 pre-industrial temperature. The shaded bands show the
-  Paris Agreement’s 1.5&nbsp;°C and 2.0&nbsp;°C temperature goals.
+  This visualization uses the CMIP6 climate model projections to show how much warmer the top 5 most
+  polluted countries will become under different future emissions scenarios/predictions (SSP1–2.6 through
+  SSP5–8.5). The difference is computed relative to the selected countries model-estimated
+  1850–1900 pre-industrial temperature. 
+</p>
+<p>
+  The <strong>Paris Agreement</strong> is an international climate treaty adopted in 2015, in
+  which almost every country agreed to limit global warming this century to
+  <strong>well below 2&nbsp;°C</strong> above pre-industrial levels and to aim to
+  limit global warming to <strong>1.5&nbsp;°C</strong>. 
+</p>
+
+
+<p style="margin-top:10px;">
+  <strong>SSP</strong> stands for <strong>Shared Socioeconomic Pathways</strong>, which are 
+  future world scenarios used in climate research. Each SSP is a scenario that represents
+  a different combination of population growth, technology development, policy choices, and
+  greenhosue gas emissions. Lower-emission pathways like <strong>SSP1–2.6</strong> assume 
+  strong global cooperation and rapid decarbonization, while high-emission pathways such as
+  <strong>SSP5–8.5</strong> assume continued fossil fuel use and limited climate policy.
 </p>
   </header>
 
   <section id="controls">
     <div>
-      <label>Countries</label>
-      <select id="countrySelect" multiple size="5"></select>
-    </div>
+  <label>Countries</label>
+  <div id="countryList" class="country-column"></div>
+  </div>
     <div>
-  <label>Scenarios</label>
+  <label>Different scenarios</label>
   <div class="scenario-column">
 
     <label class="scenario-item">
       <span class="legend-box" style="background:#1f77b4;"></span>
-      <input type="checkbox" value="ssp126" checked>
-      SSP1-2.6 <span class="scenario-desc">(Low emissions)</span>
+      <input type="checkbox" class="scenario-toggle" value="ssp126" checked>
+      SSP1-2.6 <span class="scenario-desc">(Low emissions scenario)</span>
     </label>
 
     <label class="scenario-item">
       <span class="legend-box" style="background:#2ca02c;"></span>
-      <input type="checkbox" value="ssp245" checked>
-      SSP2-4.5 <span class="scenario-desc">(Intermediate)</span>
+      <input type="checkbox" class="scenario-toggle" value="ssp245" checked>
+      SSP2-4.5 <span class="scenario-desc">(Intermediate scenario)</span>
     </label>
 
     <label class="scenario-item">
       <span class="legend-box" style="background:#ff7f0e;"></span>
-      <input type="checkbox" value="ssp370" checked>
-      SSP3-7.0 <span class="scenario-desc">(High emissions)</span>
+      <input type="checkbox" class="scenario-toggle" value="ssp370" checked>
+      SSP3-7.0 <span class="scenario-desc">(High emissions scenario)</span>
     </label>
 
     <label class="scenario-item">
       <span class="legend-box" style="background:#d62728;"></span>
-      <input type="checkbox" value="ssp585" checked>
-      SSP5-8.5 <span class="scenario-desc">(Very high emissions)</span>
+      <input type="checkbox" class="scenario-toggle" value="ssp585" checked>
+      SSP5-8.5 <span class="scenario-desc">(Very high emissions scenario)</span>
     </label>
 
   </div>
 </div>
-    <div>
-      <label>Rolling mean (years)</label>
-      <input id="smooth" type="range" min="1" max="11" step="2" value="5">
-      <span id="smoothLabel">5</span>
-    </div>
+    
   </section>
 
   
@@ -70,13 +81,13 @@
 
   <section id="notes">
     <p>
-  <em>Note:</em> A temperature anomaly measures how much warmer a given year is compared to
+  <em>Note:</em> A temperature difference measures how much warmer a given year is compared to
   the 1850–1900 average for the selected countries.
 </p>
 
 <p style="margin-top:6px;">
   <strong>For example:</strong> If in 2027 the annual mean temperature in the United States is predicted to be
-  13&nbsp;°C and the 1850–1900 average in the United States is 12&nbsp;°C, then the anomaly is 1&nbsp;°C.
+  13&nbsp;°C and the 1850–1900 average in the United States is 12&nbsp;°C, then the difference is 1&nbsp;°C.
 </p>
 
 <p>

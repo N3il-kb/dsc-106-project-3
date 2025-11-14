@@ -1,4 +1,4 @@
-const W = 980, H = 400, M = {t:20,r:20,b:30,l:48};
+const W = 980, H = 400, M = {t:20,r:120,b:30,l:48};
 const HC = 80, MC = {t:10,r:20,b:20,l:48}; // context
 
 let currentSeries = [];
@@ -146,7 +146,7 @@ gF.selectAll(".y-label").data([0])
     .attr("fill", "#ccc")
     .attr("text-anchor", "middle")
     .style("font-size", "14px")
-    .text("Temperature Anomaly (°C)");
+    .text("Temperature Difference (°C)");
 
   // 6) Paris bands + lines
   const bands = gF.selectAll(".band").data(yParis);
@@ -173,7 +173,20 @@ gF.selectAll(".y-label").data([0])
     .attr("y2", d => y(d))
     .attr("stroke", "#777")
     .attr("stroke-dasharray", "4 4");
+  const pLabels = gF.selectAll(".paris-label").data(yParis);
 
+const pRightLabels = gF.selectAll(".paris-right-label").data(yParis);
+
+pRightLabels.join(
+  enter => enter.append("text")
+    .attr("class", "paris-right-label")
+    .attr("text-anchor", "start")
+    .attr("fill", "#ccc")
+    .style("font-size", "12px")
+)
+  .attr("x", innerW + 8)               // outside the chart, small padding
+  .attr("y", d => y(d) + 4)            // aligned vertically w/ dashed line
+  .text(d => `${d.toFixed(1)}°C Paris target`);
   // 7) Lines: one path per scenario
   const scenPaths = gF.selectAll(".series")
     .data(scenarioSeries, d => d.scenario);
@@ -227,17 +240,12 @@ const thresh = d.y.toFixed(1);
         .style("left", (ev.pageX + 12) + "px")
         .style("top", (ev.pageY - 20) + "px")
         .html(`
-          <strong>${scenLabel} crosses ${thresh}&nbsp;°C</strong><br>
-          Around year ${yearApprox}<br><br>
-          <strong>How this point is calculated:</strong><br>
-          1. Compute annual mean temperature for: ${countriesList}.<br>
-          2. Convert each year to an anomaly relative to the 1850–1900 model-estimated baseline.<br>
-          3. Average anomalies across the selected countries for ${scenLabel}.<br>
-          4. Apply a ${state.smooth}-year rolling mean to smooth the curve.<br>
-          5. Linearly interpolate the first year where the smoothed line exceeds ${thresh}&nbsp;°C.
+          <strong>${scenLabel} crosses ${thresh}&nbsp;°C around year ${yearApprox}</strong><br>
+          <br><br>
         `);
     })
     .on("mouseout", function () {
+      markHover = false; 
       tip.style("opacity", 0);
     });
 
@@ -333,24 +341,45 @@ function renderContext() {
 
 d3.csv("data/cmip6_country_anomalies.csv", parse).then(raw => {
   data = raw;
-  countriesAll = Array.from(new Set(data.map(d=>d.country))).sort();
-  // populate select
-  const sel = d3.select("#countrySelect");
-  countriesAll.forEach(c => sel.append("option").attr("value",c).text(c));
-  // default pick 5
-  state.countries = countriesAll.slice(0,5);
-  sel.selectAll("option").property("selected", d => state.countries.includes(d));
+  countriesAll = Array.from(new Set(data.map(d => d.country))).sort();
 
-  sel.on("change", ev => {
-    const selected = Array.from(ev.target.selectedOptions).map(o=>o.value);
-    state.countries = selected.slice(0,8); // keep it readable
-    render();
-  });
+// Choose some default countries (e.g., first 3)
+state.countries = countriesAll.slice(0, 5);
 
-  d3.selectAll('#controls input[type="checkbox"]').on("change", function(){
-    if (this.checked) state.scenarios.add(this.value); else state.scenarios.delete(this.value);
-    render();
-  });
+const list = d3.select("#countryList");
+
+countriesAll.forEach(c => {
+  const row = list.append("label")
+    .attr("class", "country-item");
+
+  row.append("input")
+    .attr("type", "checkbox")
+    .attr("value", c)
+    .property("checked", state.countries.includes(c))
+    .on("change", function () {
+      const val = this.value;
+      if (this.checked) {
+        if (!state.countries.includes(val)) {
+          state.countries.push(val);
+        }
+      } else {
+        state.countries = state.countries.filter(d => d !== val);
+      }
+      render();
+    });
+
+  row.append("span").text(c);
+});
+
+
+  d3.selectAll('.scenario-toggle').on("change", function () {
+  if (this.checked) {
+    state.scenarios.add(this.value);
+  } else {
+    state.scenarios.delete(this.value);
+  }
+  render();
+});
 
   d3.select("#smooth").on("input", (ev)=>{
     state.smooth = +ev.target.value;
